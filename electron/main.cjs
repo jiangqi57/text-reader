@@ -6,7 +6,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1400,
     height: 920,
-    minWidth: 1000,
+    minWidth: 700,
     minHeight: 700,
     autoHideMenuBar: true,
     title: 'TXT Reader',

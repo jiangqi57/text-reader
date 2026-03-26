@@ -1,16 +1,77 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# TXT Reader
 
-Currently, two official plugins are available:
+这是一个基于 React 和 Electron 构建的本地 TXT 文本阅读器。该应用既可以在浏览器中运行，也可以打包为独立的桌面应用（目前主要针对 macOS）。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ 核心功能
 
-## React Compiler
+* **本地书库管理**：通过 File System Access API 直接选择本地文件夹作为书库，无需上传，自动读取文件夹内的 `.txt` 文件，并在“书库视图”中按文件名展示，可搜索筛选。
+* **自动提取目录**：内置解析器自动识别 TXT 中的章节标题，生成章节列表，支持侧边抽屉快速跳转。
+* **阅读进度记忆**：为每本书单独记录**上次阅读章节**，并记住**上次打开的书**；重启应用后可无缝继续阅读。
+* **书签系统**：
+    * 在章节顶部点击「☆ / ★」即可为当前章节添加/移除书签。
+    * 右侧「书签」抽屉会按书籍中的章节展示：
+        * 书签章节名（点击跳转到该章节）。
+        * 该章节下的每一条划线原文及其笔记（点击直接跳转到对应位置）。
+* **划线 + 笔记**：
+    * 在章节正文中**用鼠标选中文本**后，会在选区附近弹出小浮窗。
+    * 可以为选中的原文添加高亮，并写一段笔记；再次选中该高亮中的任意一部分，即可重新打开并编辑/删除这条笔记。
+    * 所有划线和笔记都会按「书名 + 章节」本地保存，不会上传网络。
+* **多主题与阅读样式**：
+    * 主题：浅色 (Light)、深色 (Dark)、护眼 (Eye-care)、羊皮纸 (Parchment)、纯黑 (Black)。
+    * 字号：支持自由调节（约 16px - 34px）。
+    * 版心宽度：窄 / 中 / 宽，可配合桌面宽屏或窄窗口阅读。
+    * 行距：紧凑 / 舒适 / 宽松，可根据个人习惯选择。
+* **响应式布局**：
+    * 宽屏下，目录 / 书签 / 样式 / 字号采用右侧悬浮按钮，贴近版心右侧。
+    * 窄屏下（窗口较窄时），这些操作自动收纳到顶部右上角的小图标按钮，更适合小窗口阅读。
+* **桌面应用与应用图标**：通过 Electron-builder 打包为 macOS 桌面应用，支持生成 `.dmg` / `.zip`，并可自定义应用图标（`build/icon.icns`）。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ 技术栈
 
-## Expanding the ESLint configuration
+* **前端框架**：React 19, Vite。
+* **桌面端支持**：Electron 41, Electron-builder。
+* **数据持久化**：
+    * 使用 `idb` (IndexedDB) 保存本地目录读取权限。
+    * 使用 LocalStorage 存储用户的偏好设置（主题、字号、版心宽度、行距等）、阅读进度（每本书的最后章节）、章节书签、划线和笔记。
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 快速开始
+
+### 安装依赖
+
+首先，确保你已经安装了 Node.js，然后在项目根目录下运行以下命令安装所需的依赖包：
+
+```bash
+npm install
+```
+
+### 开发环境
+
+如果你只想在浏览器中运行和开发网页端，请运行以下命令启动 Vite 开发服务器（默认地址为 http://localhost:5173 ）：
+
+```bash
+npm run dev
+```
+
+
+如果你想在 Electron 桌面应用环境中进行开发，请运行：
+
+```bash
+npm run electron:dev
+```
+
+
+### 构建与打包
+
+如果你需要将前端网页构建为生产环境代码（输出到 `dist` 目录）：
+
+```bash
+npm run build
+```
+
+
+如果你需要构建并打包整个 Electron 桌面端应用程序（输出文件在 `release` 目录，包含 `.app`、`.dmg` 等）：
+
+```bash
+npm run electron:build
+```
